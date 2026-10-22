@@ -27,7 +27,7 @@ Open **http://127.0.0.1:5199/**.
 The first load compiles the shaders for the entire world before play begins; on slower GPUs this can
 take a minute or more. The loading bar reports the stage.
 
-The checkout is about 335 MB because the optimized art bundle is included, so the reference build
+The tracked files total about 365 MB because the optimized art bundle is included, so the reference build
 runs without any external asset library. See [Assets and licensing](#assets-and-licensing).
 
 For a production build:
