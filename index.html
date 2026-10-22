@@ -1,0 +1,1511 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>REINCARNATION: THE SERPENT'S SPINE — WebGPU Soulslike</title>
+  <link rel="icon" href="data:,">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <style>
+    :root {
+      --bg-obsidian: rgba(7, 10, 15, 0.88);
+      --border-gold: rgba(218, 179, 108, 0.42);
+      --gold-bright: #f4d28c;
+      --crimson-hp: #c92424;
+      --crimson-glow: #ff4438;
+      --emerald-stam: #36b57e;
+      --focus-cyan: #58e6ff;
+      --poise-amber: #ff9829;
+      --text-ivory: #f4ece0;
+      --text-muted: #a69d8e;
+      /* 1.85:1 Widescreen Cinema Safe Area Calculation:
+         Central 1.85:1 viewport height = min(calc(100vh - 116px), calc(100vw / 1.85)).
+         Top & bottom letterbox bars hold ALL HUD chrome outside the 1.85:1 frame! */
+      --cinema-bar-h: max(58px, calc((100vh - (100vw / 1.85)) * 0.5));
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      user-select: none;
+    }
+
+    html, body {
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      background: #05070b;
+      color: var(--text-ivory);
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    }
+
+    #canvas-container {
+      position: fixed;
+      inset: 0;
+      z-index: 1;
+    }
+
+    /* Loading Overlay */
+    #loading-overlay {
+      position: fixed;
+      inset: 0;
+      z-index: 100;
+      background: radial-gradient(circle at center, #121822 0%, #05070b 100%);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      transition: opacity 0.6s ease, visibility 0.6s ease;
+    }
+    #loading-overlay.fade-out {
+      opacity: 0;
+      visibility: hidden;
+      pointer-events: none;
+    }
+    .loading-crest {
+      font-family: 'Cinzel', Georgia, serif;
+      font-size: 2.2rem;
+      font-weight: 700;
+      letter-spacing: 0.22em;
+      color: var(--gold-bright);
+      text-shadow: 0 0 28px rgba(244, 210, 140, 0.35);
+      margin-bottom: 0.4rem;
+    }
+    .loading-sub {
+      font-size: 0.82rem;
+      letter-spacing: 0.28em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      margin-bottom: 2rem;
+    }
+    .loading-bar-track {
+      width: min(420px, 80vw);
+      height: 4px;
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(218, 179, 108, 0.28);
+      border-radius: 2px;
+      overflow: hidden;
+      margin-bottom: 0.85rem;
+    }
+    #loading-bar-fill {
+      width: 12%;
+      height: 100%;
+      background: linear-gradient(90deg, #b8863b, #ffe09e);
+      transition: width 0.25s ease;
+    }
+    #loading-status {
+      font-size: 0.78rem;
+      color: var(--text-muted);
+      letter-spacing: 0.06em;
+    }
+
+    /* Diegetic HUD Layer — Strictly outside the central 1.85:1 cinema frame */
+    #hud-layer {
+      position: fixed;
+      inset: 0;
+      z-index: 10;
+      pointer-events: none;
+    }
+
+    .hidden {
+      display: none !important;
+    }
+
+    /* Subtle 1.85:1 Widescreen Cinema Letterbox Bars (Top & Bottom) */
+    #hud-cinema-top {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: var(--cinema-bar-h);
+      background: linear-gradient(180deg, rgba(4, 6, 10, 0.92) 0%, rgba(4, 6, 10, 0.68) 78%, rgba(4, 6, 10, 0) 100%);
+      border-bottom: 1px solid rgba(218, 179, 108, 0.16);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 18px;
+      pointer-events: none;
+    }
+
+    #hud-cinema-bottom {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: max(64px, var(--cinema-bar-h));
+      background: linear-gradient(0deg, rgba(4, 6, 10, 0.94) 0%, rgba(4, 6, 10, 0.74) 80%, rgba(4, 6, 10, 0) 100%);
+      border-top: 1px solid rgba(218, 179, 108, 0.18);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 18px;
+      gap: 14px;
+      pointer-events: none;
+    }
+
+    /* Top Left Symbolic Crest & Settings Trigger */
+    #hud-top-left {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      pointer-events: auto;
+    }
+
+    .sym-icon-btn {
+      position: relative;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      height: 36px;
+      padding: 0 10px;
+      background: rgba(10, 14, 20, 0.86);
+      border: 1px solid rgba(218, 179, 108, 0.42);
+      border-radius: 5px;
+      color: var(--gold-bright);
+      cursor: pointer;
+      transition: all 0.15s ease;
+      backdrop-filter: blur(6px);
+      text-decoration: none;
+    }
+    .sym-icon-btn:hover {
+      background: rgba(218, 179, 108, 0.22);
+      border-color: var(--gold-bright);
+      transform: translateY(-1px);
+    }
+    .sym-icon-btn svg {
+      width: 18px;
+      height: 18px;
+      stroke: currentColor;
+      fill: none;
+      stroke-width: 1.9;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+      flex-shrink: 0;
+    }
+    .sym-key-tag {
+      font-size: 0.58rem;
+      font-weight: 700;
+      letter-spacing: 0.06em;
+      color: #d8cebe;
+      background: rgba(255, 255, 255, 0.08);
+      padding: 1px 4px;
+      border-radius: 3px;
+    }
+
+    #hud-backend-badge {
+      font-size: 0.58rem;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      padding: 3px 6px;
+      border-radius: 3px;
+      background: rgba(110, 140, 180, 0.18);
+      color: #b8d4f4;
+      border: 1px solid rgba(130, 175, 225, 0.3);
+    }
+    #hud-backend-badge.webgpu-ok {
+      background: rgba(54, 181, 126, 0.18);
+      color: #6ff7ba;
+      border-color: rgba(88, 235, 168, 0.42);
+    }
+    .hud-difficulty-badge {
+      height: 22px;
+      padding: 0 7px;
+      border-radius: 3px;
+      background: rgba(218, 179, 108, 0.16);
+      border: 1px solid rgba(218, 179, 108, 0.4);
+      color: var(--gold-bright);
+      font-family: inherit;
+      font-size: 0.58rem;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      cursor: pointer;
+      pointer-events: auto;
+      transition: background 0.15s ease, border-color 0.15s ease, color 0.15s ease;
+    }
+    .hud-difficulty-badge:hover {
+      background: rgba(218, 179, 108, 0.3);
+      border-color: var(--gold-bright);
+    }
+    .hud-difficulty-badge[data-difficulty="easy"] {
+      color: #7be0ff;
+      border-color: rgba(88, 230, 255, 0.46);
+      background: rgba(88, 230, 255, 0.14);
+    }
+    .hud-difficulty-badge[data-difficulty="normal"] {
+      color: #ffd270;
+      border-color: rgba(255, 210, 112, 0.46);
+      background: rgba(255, 210, 112, 0.14);
+    }
+    .hud-difficulty-badge[data-difficulty="expert"] {
+      color: #ff9a72;
+      border-color: rgba(255, 106, 54, 0.46);
+      background: rgba(255, 106, 54, 0.14);
+    }
+    @media (max-width: 900px) {
+      .hud-difficulty-badge {
+        display: none;
+      }
+    }
+
+    /* Top Center Boss Health & Posture Bar (Docked inside Top Cinema Bar) */
+    #hud-boss-container {
+      flex: 1;
+      max-width: min(560px, 46vw);
+      margin: 0 12px;
+      background: rgba(9, 11, 15, 0.82);
+      border: 1px solid rgba(226, 174, 98, 0.42);
+      padding: 5px 12px 6px;
+      border-radius: 4px;
+      pointer-events: none;
+    }
+    .boss-header-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 3px;
+    }
+    #hud-boss-name {
+      font-family: 'Cinzel', Georgia, serif;
+      font-size: 0.82rem;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      color: #fbe5be;
+    }
+    #hud-boss-subtitle {
+      font-size: 0.64rem;
+      color: var(--text-muted);
+      margin-left: 6px;
+    }
+    .boss-badges {
+      display: flex;
+      gap: 4px;
+    }
+    .boss-badge {
+      font-size: 0.56rem;
+      font-weight: 700;
+      letter-spacing: 0.06em;
+      padding: 1px 5px;
+      border-radius: 2px;
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.18);
+      color: #e4d8c4;
+    }
+    #hud-boss-stance.broken {
+      background: rgba(255, 68, 42, 0.32);
+      border-color: #ff6242;
+      color: #ffcabd;
+      animation: pulseGlow 0.55s infinite alternate;
+    }
+    .boss-hp-track {
+      position: relative;
+      width: 100%;
+      height: 7px;
+      background: rgba(25, 16, 16, 0.9);
+      border: 1px solid rgba(218, 179, 108, 0.45);
+      margin-bottom: 3px;
+      overflow: hidden;
+    }
+    #hud-boss-hp-trail {
+      position: absolute;
+      top: 0;
+      left: 0;
+      height: 100%;
+      width: 100%;
+      background: rgba(255, 214, 150, 0.65);
+    }
+    #hud-boss-hp-fill {
+      position: relative;
+      height: 100%;
+      width: 100%;
+      background: linear-gradient(90deg, #8e1414, #df2c24, #ff5d47);
+    }
+    .boss-poise-row {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .boss-poise-track {
+      flex: 1;
+      height: 4px;
+      background: rgba(255, 255, 255, 0.09);
+      border: 1px solid rgba(243, 181, 98, 0.35);
+      overflow: hidden;
+    }
+    #hud-boss-poise-fill {
+      height: 100%;
+      width: 100%;
+      background: linear-gradient(90deg, #d97218, #ffc258);
+      transition: width 0.1s ease;
+    }
+
+    /* Top Right Compact Symbolic Radar & Collapsible Minimap Drawer */
+    #hud-top-right {
+      position: relative;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      pointer-events: auto;
+    }
+    .radar-pill {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(8, 11, 16, 0.86);
+      border: 1px solid var(--border-gold);
+      border-radius: 5px;
+      padding: 3px 8px;
+      height: 40px;
+    }
+    #hud-minimap-canvas {
+      width: 54px;
+      height: 32px;
+      border: 1px solid rgba(255, 255, 255, 0.14);
+      border-radius: 3px;
+      display: block;
+      cursor: pointer;
+    }
+    .radar-meta {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+    #hud-minimap-zone {
+      font-family: 'Cinzel', Georgia, serif;
+      font-size: 0.64rem;
+      font-weight: 700;
+      color: var(--gold-bright);
+      max-width: 118px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    #hud-minimap-pct {
+      font-size: 0.58rem;
+      font-weight: 700;
+      color: #7ee8fa;
+    }
+
+    /* Zone Atmospheric Banner (Transient Fade) */
+    #hud-zone-banner {
+      position: absolute;
+      top: calc(var(--cinema-bar-h) + 34px);
+      left: 50%;
+      transform: translateX(-50%);
+      text-align: center;
+      pointer-events: none;
+      transition: opacity 0.5s ease;
+    }
+    #hud-zone-title {
+      font-family: 'Cinzel', Georgia, serif;
+      font-size: 1.45rem;
+      font-weight: 700;
+      letter-spacing: 0.22em;
+      color: var(--gold-bright);
+      text-shadow: 0 4px 20px rgba(0, 0, 0, 0.95);
+    }
+    #hud-zone-subtitle {
+      font-size: 0.72rem;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: #d8cfc0;
+      text-shadow: 0 2px 10px rgba(0, 0, 0, 0.95);
+    }
+
+    /* Center Combat Callout Banner (Transient) */
+    #hud-combat-callout {
+      position: absolute;
+      top: calc(var(--cinema-bar-h) + 28px);
+      left: 50%;
+      transform: translateX(-50%);
+      text-align: center;
+      pointer-events: none;
+      background: radial-gradient(ellipse at center, rgba(10, 14, 20, 0.75) 0%, rgba(10, 14, 20, 0) 75%);
+      padding: 6px 28px;
+    }
+    #hud-callout-title {
+      font-family: 'Cinzel', Georgia, serif;
+      font-size: 1.05rem;
+      font-weight: 800;
+      letter-spacing: 0.15em;
+      text-shadow: 0 0 14px rgba(0, 0, 0, 0.95);
+    }
+    #hud-callout-sub {
+      font-size: 0.68rem;
+      font-weight: 600;
+      color: #e8dfd1;
+    }
+
+    /* Shrine Interaction Prompt */
+    #hud-interact-prompt {
+      position: absolute;
+      bottom: calc(max(64px, var(--cinema-bar-h)) + 12px);
+      left: 50%;
+      transform: translateX(-50%);
+      background: rgba(12, 16, 22, 0.88);
+      border: 1px solid var(--gold-bright);
+      padding: 6px 14px;
+      border-radius: 4px;
+      font-family: 'Cinzel', Georgia, serif;
+      font-size: 0.76rem;
+      font-weight: 600;
+      color: var(--gold-bright);
+    }
+
+    /* 3D Lock-On Reticle */
+    #hud-lock-reticle {
+      position: absolute;
+      width: 24px;
+      height: 24px;
+      margin-left: -12px;
+      margin-top: -12px;
+      border: 2px solid #fff3d1;
+      border-radius: 50%;
+      box-shadow: 0 0 12px #ffae42, inset 0 0 8px #ffae42;
+      pointer-events: none;
+    }
+    #hud-lock-reticle::after {
+      content: '';
+      position: absolute;
+      inset: 6px;
+      border-radius: 50%;
+      background: #ffdf9e;
+    }
+    #hud-lock-reticle.poise-broken {
+      border-color: #ff3b28;
+      box-shadow: 0 0 18px #ff3b28, inset 0 0 10px #ff3b28;
+      transform: scale(1.3);
+    }
+
+    /* ==========================================================================
+       BOTTOM LEFT: SYMBOLIC VITALITY / STAMINA / ATB / LIMIT / VESSEL CLUSTER
+       ========================================================================== */
+    #hud-bottom-left {
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      pointer-events: auto;
+    }
+
+    .vitals-symbolic-card {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      width: min(215px, 21vw);
+      background: rgba(8, 11, 16, 0.86);
+      border: 1px solid var(--border-gold);
+      border-radius: 5px;
+      padding: 5px 8px;
+    }
+
+    .sym-meter-row {
+      display: flex;
+      align-items: center;
+      gap: 7px;
+    }
+    .sym-meter-icon {
+      width: 15px;
+      height: 15px;
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .sym-meter-icon svg {
+      width: 14px;
+      height: 14px;
+      fill: currentColor;
+    }
+    .sym-meter-icon.hp { color: #ff5448; filter: drop-shadow(0 0 5px rgba(255, 68, 56, 0.55)); }
+    .sym-meter-icon.stam { color: #3ed493; filter: drop-shadow(0 0 5px rgba(62, 212, 147, 0.5)); }
+    .sym-meter-icon.atb { color: #58e6ff; filter: drop-shadow(0 0 5px rgba(88, 230, 255, 0.55)); }
+    .sym-meter-icon.limit { color: #ffd700; filter: drop-shadow(0 0 5px rgba(255, 215, 0, 0.55)); }
+
+    .bar-track {
+      position: relative;
+      flex: 1;
+      height: 8px;
+      background: rgba(18, 22, 28, 0.95);
+      border: 1px solid rgba(255, 255, 255, 0.16);
+      border-radius: 2px;
+      overflow: hidden;
+    }
+    #hud-player-hp-trail {
+      position: absolute;
+      top: 0;
+      left: 0;
+      height: 100%;
+      width: 100%;
+      background: rgba(255, 220, 160, 0.65);
+    }
+    #hud-player-hp-fill {
+      position: relative;
+      height: 100%;
+      width: 100%;
+      background: linear-gradient(90deg, #981b1b, #e3342f, #ff6452);
+    }
+    .bar-track.stamina-track {
+      height: 6px;
+    }
+    #hud-player-stam-fill {
+      height: 100%;
+      width: 100%;
+      background: linear-gradient(90deg, #1d7d55, #3ed493);
+    }
+    .sym-meter-val {
+      font-size: 0.58rem;
+      font-weight: 700;
+      color: #d8cebe;
+      min-width: 44px;
+      text-align: right;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    /* Symbolic ATB + Limit Compact Row */
+    .atb-limit-symbolic-row {
+      display: flex;
+      align-items: center;
+      gap: 7px;
+    }
+    #hud-focus-segments {
+      flex: 1;
+      display: flex;
+      gap: 4px;
+    }
+    .focus-seg {
+      flex: 1;
+      height: 6px;
+      background: rgba(18, 28, 38, 0.92);
+      border: 1px solid rgba(110, 210, 255, 0.35);
+      border-radius: 2px;
+      overflow: hidden;
+    }
+    .focus-seg-fill {
+      height: 100%;
+      width: 0%;
+      background: linear-gradient(90deg, #3ea8ff, #8cf4ff);
+      transition: width 0.12s ease;
+    }
+    .focus-seg.charged {
+      border-color: #b5fbff;
+      box-shadow: 0 0 8px rgba(88, 230, 255, 0.65);
+    }
+    .focus-seg.charged .focus-seg-fill {
+      background: linear-gradient(90deg, #5ce1ff, #ffffff);
+    }
+    .limit-mini-track {
+      width: 68px;
+      height: 6px;
+      background: rgba(28, 20, 14, 0.92);
+      border: 1px solid rgba(255, 190, 72, 0.45);
+      border-radius: 2px;
+      overflow: hidden;
+    }
+    #hud-limit-fill {
+      height: 100%;
+      width: 100%;
+      background: linear-gradient(90deg, #ff7b1c, #ffd700, #fff4b8);
+    }
+
+    /* Symbolic Stance / Mend / Hero / Blade / Grimoire Quick-Crests */
+    .vessel-crest-strip {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+    .crest-btn {
+      position: relative;
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      height: 40px;
+      padding: 0 7px;
+      background: rgba(10, 14, 20, 0.88);
+      border: 1px solid rgba(218, 179, 108, 0.38);
+      border-radius: 5px;
+      color: var(--text-ivory);
+      cursor: pointer;
+      transition: all 0.14s ease;
+    }
+    .crest-btn:hover {
+      background: rgba(218, 179, 108, 0.22);
+      border-color: var(--gold-bright);
+      transform: translateY(-1px);
+    }
+    .crest-btn svg {
+      width: 18px;
+      height: 18px;
+      stroke: currentColor;
+      fill: none;
+      stroke-width: 1.85;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+      flex-shrink: 0;
+    }
+    .crest-btn.punisher {
+      background: rgba(255, 78, 42, 0.24);
+      border-color: #ff6242;
+      color: #ffcabd;
+      box-shadow: 0 0 10px rgba(255, 78, 42, 0.35);
+    }
+    .crest-btn.gourd {
+      border-color: rgba(255, 95, 82, 0.45);
+      color: #ff9e92;
+    }
+    .crest-badge {
+      font-size: 0.62rem;
+      font-weight: 700;
+      color: var(--gold-bright);
+      max-width: 68px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .crest-sub {
+      position: absolute;
+      top: 2px;
+      right: 4px;
+      font-size: 0.5rem;
+      font-weight: 700;
+      color: var(--text-muted);
+      letter-spacing: 0.04em;
+    }
+
+    /* ==========================================================================
+       BOTTOM RIGHT: COLLAPSIBLE & EXPANDABLE THEMATIC SYMBOLIC STACKS
+       ========================================================================== */
+    #hud-combat-deck {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      pointer-events: auto;
+    }
+
+    .sym-stack {
+      display: flex;
+      align-items: center;
+      background: rgba(8, 11, 16, 0.88);
+      border: 1px solid rgba(218, 179, 108, 0.38);
+      border-radius: 6px;
+      padding: 2px 3px;
+      gap: 3px;
+      transition: all 0.2s cubic-bezier(0.22, 1, 0.36, 1);
+    }
+    .sym-stack[data-theme="atb"] {
+      border-color: rgba(88, 230, 255, 0.42);
+    }
+    .sym-stack[data-theme="magic"] {
+      border-color: rgba(159, 255, 230, 0.42);
+    }
+    .sym-stack[data-theme="counter"] {
+      border-color: rgba(255, 159, 64, 0.42);
+    }
+
+    /* Stack Header Toggle Button */
+    .stack-toggle-btn {
+      position: relative;
+      width: 32px;
+      height: 34px;
+      border-radius: 4px;
+      border: 1px solid rgba(255, 255, 255, 0.14);
+      background: rgba(255, 255, 255, 0.06);
+      color: var(--gold-bright);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: all 0.15s ease;
+      flex-shrink: 0;
+    }
+    .sym-stack[data-theme="atb"] .stack-toggle-btn { color: #7ee8fa; }
+    .sym-stack[data-theme="magic"] .stack-toggle-btn { color: #9fffe6; }
+    .sym-stack[data-theme="counter"] .stack-toggle-btn { color: #ffad5c; }
+
+    .stack-toggle-btn:hover {
+      background: rgba(218, 179, 108, 0.22);
+      border-color: currentColor;
+    }
+    .stack-toggle-btn svg {
+      width: 17px;
+      height: 17px;
+      stroke: currentColor;
+      fill: none;
+      stroke-width: 1.9;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+    .stack-chevron {
+      position: absolute;
+      bottom: 1px;
+      right: 3px;
+      font-size: 0.5rem;
+      font-weight: 800;
+      opacity: 0.78;
+    }
+
+    /* Collapsible drawer of symbolic move buttons inside each stack */
+    .stack-items {
+      display: flex;
+      align-items: center;
+      gap: 3px;
+      overflow: hidden;
+      max-width: 240px;
+      opacity: 1;
+      transition: max-width 0.22s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.18s ease, margin 0.18s ease;
+    }
+    .sym-stack.collapsed .stack-items {
+      max-width: 0;
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    /* Purely Symbolic Move Icon Button */
+    .skill-btn {
+      position: relative;
+      width: 34px;
+      height: 34px;
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid rgba(218, 179, 108, 0.3);
+      border-radius: 4px;
+      color: var(--text-ivory);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: all 0.14s ease;
+      flex-shrink: 0;
+    }
+    .skill-btn:hover {
+      background: rgba(218, 179, 108, 0.24);
+      border-color: var(--gold-bright);
+      transform: translateY(-2px);
+      color: #ffffff;
+    }
+    .skill-btn svg {
+      width: 21px;
+      height: 21px;
+      stroke: currentColor;
+      fill: none;
+      stroke-width: 1.85;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+    .skill-btn.atb {
+      border-color: rgba(88, 230, 255, 0.38);
+      color: #bbf6ff;
+    }
+    .skill-btn.atb:hover {
+      background: rgba(88, 230, 255, 0.22);
+      border-color: #7ee8fa;
+    }
+    .skill-btn.magic {
+      border-color: rgba(159, 255, 230, 0.38);
+      color: #b8ffee;
+    }
+    .skill-btn.limit {
+      border-color: rgba(255, 215, 0, 0.65);
+      background: rgba(255, 180, 40, 0.15);
+      color: #ffe680;
+    }
+    .skill-btn .sk-key {
+      position: absolute;
+      bottom: 1px;
+      right: 3px;
+      font-size: 0.5rem;
+      font-weight: 800;
+      color: var(--gold-bright);
+      letter-spacing: 0.02em;
+      line-height: 1;
+    }
+    .skill-btn.atb .sk-key { color: #7ee8fa; }
+    .skill-btn.magic .sk-key { color: #9fffe6; }
+    .skill-btn.limit .sk-key { color: #ffd700; }
+
+    /* Hover symbolic tooltip above button */
+    .skill-btn::after,
+    .stack-toggle-btn::after,
+    .crest-btn::after {
+      content: attr(data-tip);
+      position: absolute;
+      bottom: calc(100% + 7px);
+      left: 50%;
+      transform: translateX(-50%) translateY(4px);
+      background: rgba(6, 9, 14, 0.95);
+      border: 1px solid var(--border-gold);
+      color: var(--gold-bright);
+      font-size: 0.62rem;
+      font-weight: 600;
+      letter-spacing: 0.05em;
+      padding: 3px 8px;
+      border-radius: 3px;
+      white-space: nowrap;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.14s ease, transform 0.14s ease;
+      z-index: 30;
+    }
+    .skill-btn:hover::after,
+    .stack-toggle-btn:hover::after,
+    .crest-btn:hover::after {
+      opacity: 1;
+      transform: translateX(-50%) translateY(0);
+    }
+
+    /* ==========================================================================
+       [ESCAPE] SANCTUARY & TACTICAL SETTINGS MODAL
+       (Contains Hero Select, Weapon Armory, Grimoire, Symbolic Legend & Controls)
+       ========================================================================== */
+    #hud-escape-modal {
+      position: fixed;
+      inset: 0;
+      z-index: 70;
+      background: rgba(4, 7, 12, 0.9);
+      backdrop-filter: blur(14px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      pointer-events: auto;
+    }
+    .escape-card {
+      width: min(1080px, 94vw);
+      max-height: 88vh;
+      background: #090d14;
+      border: 1px solid var(--border-gold);
+      border-radius: 8px;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      box-shadow: 0 28px 70px rgba(0, 0, 0, 0.9);
+    }
+    .escape-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 14px 22px;
+      border-bottom: 1px solid rgba(218, 179, 108, 0.25);
+      background: rgba(14, 19, 28, 0.92);
+    }
+    .escape-header h2 {
+      font-family: 'Cinzel', Georgia, serif;
+      font-size: 1.15rem;
+      color: var(--gold-bright);
+      letter-spacing: 0.14em;
+    }
+    .escape-body {
+      padding: 18px 22px;
+      overflow-y: auto;
+      display: grid;
+      grid-template-columns: 1.1fr 1fr;
+      gap: 20px;
+    }
+    .esc-section {
+      background: rgba(14, 19, 28, 0.65);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 6px;
+      padding: 14px;
+    }
+    .esc-section h3 {
+      font-family: 'Cinzel', Georgia, serif;
+      font-size: 0.82rem;
+      color: var(--gold-bright);
+      letter-spacing: 0.12em;
+      margin-bottom: 10px;
+      border-bottom: 1px solid rgba(218, 179, 108, 0.2);
+      padding-bottom: 5px;
+    }
+    .selector-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 7px;
+    }
+    .sel-pill {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid rgba(218, 179, 108, 0.26);
+      border-radius: 4px;
+      padding: 7px 10px;
+      color: var(--text-ivory);
+      font-size: 0.72rem;
+      font-weight: 600;
+      cursor: pointer;
+      text-align: left;
+      transition: all 0.14s ease;
+    }
+    .sel-pill:hover {
+      background: rgba(218, 179, 108, 0.18);
+      border-color: var(--gold-bright);
+    }
+    .sel-pill.active {
+      background: rgba(218, 179, 108, 0.26);
+      border-color: var(--gold-bright);
+      color: #fff6dc;
+      box-shadow: 0 0 12px rgba(244, 210, 140, 0.25);
+    }
+    .sel-pill .tag {
+      font-size: 0.58rem;
+      color: var(--gold-bright);
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+    }
+    .esc-difficulty-summary {
+      margin-top: 9px;
+      font-size: 0.68rem;
+      line-height: 1.5;
+      color: #d6ccbc;
+    }
+    .esc-difficulty-summary strong {
+      color: var(--gold-bright);
+      font-weight: 700;
+    }
+    .esc-difficulty-summary .esc-difficulty-mods {
+      display: block;
+      margin-top: 3px;
+      font-size: 0.62rem;
+      color: #a69d8e;
+      letter-spacing: 0.02em;
+    }
+
+    /* Symbolic Move Legend & Keybindings Grid inside Escape Menu */
+    .legend-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 6px 12px;
+      font-size: 0.7rem;
+      color: #d6ccbc;
+    }
+    .legend-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 4px 6px;
+      background: rgba(255, 255, 255, 0.025);
+      border-radius: 4px;
+    }
+    .legend-item kbd {
+      background: rgba(244, 210, 140, 0.14);
+      border: 1px solid rgba(244, 210, 140, 0.38);
+      color: var(--gold-bright);
+      padding: 1px 5px;
+      border-radius: 3px;
+      font-family: inherit;
+      font-weight: 700;
+      font-size: 0.62rem;
+      min-width: 44px;
+      text-align: center;
+    }
+
+    /* Full-Screen Interactive Tactical Serpent's Spine Map Modal */
+    #hud-fullmap-modal {
+      position: fixed;
+      inset: 0;
+      z-index: 60;
+      background: rgba(4, 7, 11, 0.88);
+      backdrop-filter: blur(12px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      pointer-events: auto;
+    }
+    .fullmap-card {
+      width: min(1040px, 92vw);
+      height: min(680px, 88vh);
+      background: #0a0e15;
+      border: 1px solid var(--border-gold);
+      border-radius: 6px;
+      display: grid;
+      grid-template-columns: 1fr 310px;
+      overflow: hidden;
+      box-shadow: 0 24px 64px rgba(0, 0, 0, 0.85);
+    }
+    .fullmap-canvas-wrap {
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      padding: 16px;
+      border-right: 1px solid rgba(218, 179, 108, 0.22);
+    }
+    .fullmap-title-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 10px;
+    }
+    .fullmap-title-bar h2 {
+      font-family: 'Cinzel', Georgia, serif;
+      font-size: 1.15rem;
+      color: var(--gold-bright);
+      letter-spacing: 0.12em;
+    }
+    #hud-fullmap-canvas {
+      flex: 1;
+      width: 100%;
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      border-radius: 4px;
+      cursor: crosshair;
+    }
+    .fullmap-legend {
+      display: flex;
+      gap: 16px;
+      margin-top: 10px;
+      font-size: 0.72rem;
+      color: var(--text-muted);
+    }
+    .legend-dot {
+      display: inline-block;
+      width: 9px;
+      height: 9px;
+      border-radius: 50%;
+      margin-right: 5px;
+    }
+    .fullmap-sidebar {
+      padding: 18px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      background: rgba(13, 18, 26, 0.9);
+    }
+    .sidebar-section h3 {
+      font-family: 'Cinzel', Georgia, serif;
+      font-size: 0.86rem;
+      color: var(--gold-bright);
+      letter-spacing: 0.1em;
+      margin-bottom: 6px;
+    }
+    .sidebar-desc {
+      font-size: 0.72rem;
+      color: var(--text-muted);
+      line-height: 1.45;
+      margin-bottom: 14px;
+    }
+    #hud-shrine-list {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    .shrine-tp-btn {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid rgba(218, 179, 108, 0.32);
+      color: var(--text-ivory);
+      padding: 8px 10px;
+      border-radius: 4px;
+      cursor: pointer;
+      text-align: left;
+      transition: all 0.15s ease;
+    }
+    .shrine-tp-btn:hover {
+      background: rgba(218, 179, 108, 0.2);
+      border-color: var(--gold-bright);
+      transform: translateX(3px);
+    }
+    .shrine-key {
+      font-family: 'Cinzel', Georgia, serif;
+      font-weight: 700;
+      font-size: 0.8rem;
+      color: var(--gold-bright);
+    }
+    .shrine-title {
+      font-size: 0.76rem;
+      font-weight: 600;
+    }
+    .shrine-sub {
+      font-size: 0.64rem;
+      color: var(--text-muted);
+    }
+    #btn-close-map,
+    #btn-close-escape {
+      padding: 8px 16px;
+      background: rgba(218, 179, 108, 0.18);
+      border: 1px solid var(--gold-bright);
+      color: var(--gold-bright);
+      font-family: 'Cinzel', Georgia, serif;
+      font-weight: 700;
+      font-size: 0.76rem;
+      letter-spacing: 0.1em;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+
+    @keyframes pulseGlow {
+      from { opacity: 0.75; }
+      to { opacity: 1; }
+    }
+  </style>
+  <link rel="stylesheet" href="/src/ui/game-hud.css">
+</head>
+<body>
+  <!-- Loading Screen -->
+  <div id="loading-overlay">
+    <div class="loading-crest">THE SERPENT'S SPINE</div>
+    <div class="loading-sub">Reincarnation • WebGPU &amp; TSL Soulslike Action</div>
+    <div class="loading-bar-track">
+      <div id="loading-bar-fill"></div>
+    </div>
+    <div id="loading-status">Awakening Vessel...</div>
+  </div>
+
+  <!-- WebGPU Canvas Container -->
+  <div id="canvas-container"></div>
+
+  <!-- Diegetic Symbolic HUD (Docked Strictly Outside the 1.85:1 Cinema Frame) -->
+  <div id="hud-layer">
+    <!-- TOP CINEMA BAR -->
+    <div id="hud-cinema-top">
+      <div id="hud-top-left">
+        <button id="btn-open-escape" class="sym-icon-btn" title="Sanctuary Menu, Hero Select &amp; Controls [ESC]">
+          <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3.2"/><path d="M12 2v3M12 19v3M4.9 4.9l2.1 2.1M17 17l2.1 2.1M2 12h3M19 12h3M4.9 19.1l2.1-2.1M17 7l2.1-2.1"/></svg>
+          <span class="sym-key-tag">ESC</span>
+        </button>
+        <span id="hud-backend-badge">WEBGPU</span>
+        <button id="hud-difficulty-badge" class="hud-difficulty-badge" type="button" title="Trial difficulty — open Sanctuary [ESC] to change">EXPERT</button>
+        <button id="btn-lighting-settings" class="sym-icon-btn" title="Light &amp; sky settings [O]" aria-label="Light and sky settings">
+          <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M12 2v2m0 16v2M2 12h2m16 0h2M5 5l2 2m10 10l2 2M5 19l2-2M17 7l2-2"/></svg><span class="sym-key-tag">O</span>
+        </button>
+        <a href="/__j3stage" target="_blank" class="sym-icon-btn" title="Open J3Stage Asset &amp; Rig Inspector">
+          <svg viewBox="0 0 24 24"><polygon points="12 2 21 7 21 17 12 22 3 17 3 7"/><line x1="12" y1="22" x2="12" y2="12"/><polyline points="21 7 12 12 3 7"/></svg>
+        </a>
+      </div>
+
+      <!-- Top Center Boss Health & Posture Bar -->
+      <div id="hud-boss-container" class="hidden">
+        <div class="boss-header-row">
+          <div>
+            <span id="hud-boss-name">VANGUARD KRAMPUS</span>
+            <span id="hud-boss-subtitle">Gatekeeper of the Bamboo Narrows</span>
+          </div>
+          <div class="boss-badges">
+            <span id="hud-boss-phase" class="boss-badge">I</span>
+            <span id="hud-boss-stance" class="boss-badge">GUARD</span>
+          </div>
+        </div>
+        <div class="boss-hp-track">
+          <div id="hud-boss-hp-trail"></div>
+          <div id="hud-boss-hp-fill"></div>
+        </div>
+        <div class="boss-poise-row">
+          <div class="boss-poise-track">
+            <div id="hud-boss-poise-fill"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Top Right Symbolic Trail Radar & Map Button -->
+      <div id="hud-top-right">
+        <div class="radar-pill" title="Live Serpent's Spine Arterial Radar">
+          <canvas id="hud-minimap-canvas" width="120" height="72"></canvas>
+          <div class="radar-meta">
+            <span id="hud-minimap-zone">Zone I</span>
+            <span id="hud-minimap-pct">2%</span>
+          </div>
+        </div>
+        <button id="btn-toggle-map" class="sym-icon-btn" title="Tactical Trail Map &amp; Shrine Fast-Travel [M]">
+          <svg viewBox="0 0 24 24"><polygon points="3 6 9 3 15 6 21 3 21 18 15 21 9 18 3 21"/><line x1="9" y1="3" x2="9" y2="18"/><line x1="15" y1="6" x2="15" y2="21"/></svg>
+          <span class="sym-key-tag">M</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Transient Atmospheric Banners & Reticle -->
+    <div id="hud-zone-banner" class="hidden">
+      <div id="hud-zone-title">I. MIST-WOOD APPROACH</div>
+      <div id="hud-zone-subtitle">Sunken Creek &amp; Mossy Monoliths</div>
+    </div>
+
+    <div id="hud-combat-callout" class="hidden">
+      <div id="hud-callout-title">PERFECT DEFLECT</div>
+      <div id="hud-callout-sub">Posture Shattered • +0.5 Focus</div>
+    </div>
+
+    <div id="hud-interact-prompt" class="hidden">[E] Kindle Shrine</div>
+    <div id="hud-lock-reticle" class="hidden"></div>
+
+    <!-- BOTTOM CINEMA BAR (Symbolic Vitals + Vessel Crests + Collapsible Thematic Action Stacks) -->
+    <div id="hud-cinema-bottom">
+      <!-- Bottom Left Symbolic Vitals & Vessel Crests -->
+      <div id="hud-bottom-left">
+        <div class="vitals-symbolic-card">
+          <!-- Symbolic Vitality Row (Heart Crest SVG) -->
+          <div class="sym-meter-row" title="Vitality (HP)">
+            <span class="sym-meter-icon hp">
+              <svg viewBox="0 0 24 24"><path d="M12 21s-7-4.6-9.5-8.5C.5 9 2.4 4.5 6.8 4.5c2.3 0 3.9 1.3 5.2 3 1.3-1.7 2.9-3 5.2-3 4.4 0 6.3 4.5 4.3 8-2.5 3.9-9.5 8.5-9.5 8.5z"/></svg>
+            </span>
+            <div class="bar-track">
+              <div id="hud-player-hp-trail"></div>
+              <div id="hud-player-hp-fill"></div>
+            </div>
+            <span id="hud-player-hp-text" class="sym-meter-val">500</span>
+          </div>
+
+          <!-- Symbolic Stamina Row (Winged Bolt SVG) -->
+          <div class="sym-meter-row" title="Stamina &amp; Active Technique">
+            <span class="sym-meter-icon stam">
+              <svg viewBox="0 0 24 24"><polygon points="13 2 4 14 11 14 10 22 20 10 13 10 13 2"/></svg>
+            </span>
+            <div class="bar-track stamina-track">
+              <div id="hud-player-stam-fill"></div>
+            </div>
+            <span id="hud-last-move" class="sym-meter-val">READY</span>
+          </div>
+
+          <!-- Symbolic ATB Prisms + Limit Gauge Row -->
+          <div class="atb-limit-symbolic-row" title="ATB Focus Prisms &amp; Limit Break Gauge">
+            <span class="sym-meter-icon atb">
+              <svg viewBox="0 0 24 24"><polygon points="12 2 20 12 12 22 4 12"/></svg>
+            </span>
+            <div id="hud-focus-segments"></div>
+            <span id="hud-focus-pct" class="sym-meter-val" style="min-width: 28px; color: #58e6ff;">2/3</span>
+            <span class="sym-meter-icon limit">
+              <svg viewBox="0 0 24 24"><polygon points="12 2 15 9 22 9 16.5 14 18.5 21 12 17 5.5 21 7.5 14 2 9 9 9"/></svg>
+            </span>
+            <div class="limit-mini-track">
+              <div id="hud-limit-fill"></div>
+            </div>
+            <span id="hud-limit-text" class="hidden">100%</span>
+            <span id="hud-flow-badge" class="hidden">0/3</span>
+          </div>
+        </div>
+
+        <!-- Symbolic Stance, Mend Gourd, Hero Vessel, Blade & Grimoire Crests -->
+        <div class="vessel-crest-strip">
+          <button id="btn-stance-mode" class="crest-btn" data-tip="Stance: Operator / Punisher [Tab]">
+            <svg viewBox="0 0 24 24"><path d="M14.5 17.5L3 6V3h3l11.5 11.5"/><path d="M13 19l6-6"/><path d="M16 16l4 4"/><path d="M9.5 17.5L21 6V3h-3L6.5 14.5"/></svg>
+            <span class="crest-sub">TAB</span>
+          </button>
+
+          <button id="btn-mend-gourd" class="crest-btn gourd" data-tip="Crimson Gourd Mend [H]">
+            <svg viewBox="0 0 24 24"><path d="M9 3h6M10 3v3c0 1.5-3 3-3 6.5a5 5 0 0 0 10 0c0-3.5-3-5-3-6.5V3"/><path d="M12 11v5M9.5 13.5h5"/></svg>
+            <span id="hud-gourd-count" class="crest-badge">5</span>
+            <span class="crest-sub">H</span>
+          </button>
+
+          <button id="btn-cycle-hero" class="crest-btn" data-tip="Switch Vessel: Lady Maria / Andreas Xirtus [P]">
+            <svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M5 20c1.5-4 12.5-4 14 0"/></svg>
+            <span id="hud-hero-name" class="crest-badge">Lady Maria</span>
+            <span class="crest-sub">P</span>
+          </button>
+
+          <button id="btn-cycle-weapon" class="crest-btn" data-tip="Cycle Weapon Blade [Z]">
+            <svg viewBox="0 0 24 24"><polygon points="19 3 21 5 9 17 5 19 7 15 19 3"/><line x1="6" y1="14" x2="10" y2="18"/><line x1="3" y1="21" x2="6.5" y2="17.5"/></svg>
+            <span id="hud-weapon-name" class="crest-badge">Buster Sword</span>
+            <span class="crest-sub">Z</span>
+          </button>
+
+          <button id="btn-cycle-spell" class="crest-btn" data-tip="Cycle Grimoire Spell [N]">
+            <svg viewBox="0 0 24 24"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/><polygon points="12 7 14 11 10 11"/></svg>
+            <span id="hud-spell-name" class="crest-badge" style="color: #9fffe6;">Threadlight</span>
+            <span class="crest-sub">N</span>
+          </button>
+        </div>
+        <div id="hud-spirit-badge" class="hidden"></div>
+      </div>
+
+      <!-- Bottom Right Collapsible & Expandable Symbolic Action Stacks (Grouped by Theme Class) -->
+      <div id="hud-combat-deck">
+        <!-- STACK 1: BLADE ARTS (Dash Cleave, Rising Cut, Needle Stab, Leap Smash) -->
+        <div class="sym-stack" data-stack-group="blade" data-theme="blade">
+          <button class="stack-toggle-btn" data-stack-toggle="blade" data-tip="Blade Arts Stack (Click to Collapse/Expand)">
+            <svg viewBox="0 0 24 24"><path d="M20 4L8.5 15.5"/><polygon points="20 4 15 4 20 9"/><path d="M4 20l4.5-4.5"/><path d="M6 12l6 6"/></svg>
+            <span class="stack-chevron">▾</span>
+          </button>
+          <div class="stack-items">
+            <!-- Dash Cleave -->
+            <button class="skill-btn" data-combat-act="dash" data-tip="Dash Cleave [Shift+J]">
+              <svg viewBox="0 0 24 24"><path d="M3 10h8M2 14h6M4 18h5"/><path d="M11 19L21 5l-3 14-7 0z"/></svg>
+              <span class="sk-key">⇧J</span>
+            </button>
+            <!-- Rising Cut -->
+            <button class="skill-btn" data-combat-act="rising" data-tip="Rising Cut Launcher [R]">
+              <svg viewBox="0 0 24 24"><path d="M5 19c6-1 11-7 13-15"/><polyline points="13 4 18 4 18 9"/><path d="M8 20c4-2 8-6 10-12"/></svg>
+              <span class="sk-key">R</span>
+            </button>
+            <!-- Needle Stab -->
+            <button class="skill-btn" data-combat-act="thrust" data-tip="Needle Stab Thrust [V]">
+              <svg viewBox="0 0 24 24"><line x1="3" y1="12" x2="21" y2="12"/><polyline points="15 7 21 12 15 17"/><line x1="7" y1="9" x2="7" y2="15"/></svg>
+              <span class="sk-key">V</span>
+            </button>
+            <!-- Leap Smash -->
+            <button class="skill-btn" data-combat-act="leap" data-tip="Leap Smash Plunge [Q]">
+              <svg viewBox="0 0 24 24"><path d="M6 9c3-5 9-5 12 0"/><line x1="12" y1="5" x2="12" y2="19"/><polyline points="8 15 12 19 16 15"/><path d="M5 21h14"/></svg>
+              <span class="sk-key">Q</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- STACK 2: COUNTERS & BREAKER ARTS (Guard Break, Seam Counter) -->
+        <div class="sym-stack" data-stack-group="counter" data-theme="counter">
+          <button class="stack-toggle-btn" data-stack-toggle="counter" data-tip="Breaker &amp; Counter Stack (Click to Collapse/Expand)">
+            <svg viewBox="0 0 24 24"><path d="M12 2l8 4v6c0 5.2-3.4 9.8-8 11-4.6-1.2-8-5.8-8-11V6l8-4z"/></svg>
+            <span class="stack-chevron">▾</span>
+          </button>
+          <div class="stack-items">
+            <!-- Guard Break Kick -->
+            <button class="skill-btn" data-combat-act="kick" data-tip="Guard Break Kick [C]">
+              <svg viewBox="0 0 24 24"><path d="M12 3l7 3.5v5.5c0 4.5-3 8.5-7 9.8-4-1.3-7-5.3-7-9.8V6.5L12 3z"/><polyline points="13 7 10 12 14 13 11 18"/></svg>
+              <span class="sk-key">C</span>
+            </button>
+            <!-- 180° Seam Counter -->
+            <button class="skill-btn" data-combat-act="backhand" data-tip="180° Seam Counter [B]">
+              <svg viewBox="0 0 24 24"><path d="M3 12a9 9 0 1 0 9-9"/><polyline points="3 7 3 12 8 12"/><line x1="8" y1="16" x2="16" y2="8"/></svg>
+              <span class="sk-key">B</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- STACK 3: ATB WEAPON SKILLS & LIMIT BREAK (Braver, Focused Thrust, Infinity Spin, Cross-Slash) -->
+        <div class="sym-stack" data-stack-group="atb" data-theme="atb">
+          <button class="stack-toggle-btn" data-stack-toggle="atb" data-tip="ATB &amp; Limit Finisher Stack (Click to Collapse/Expand)">
+            <svg viewBox="0 0 24 24"><polygon points="12 2 15.2 8.6 22 9.5 17 14.4 18.2 21.5 12 18.2 5.8 21.5 7 14.4 2 9.5 8.8 8.6"/></svg>
+            <span class="stack-chevron">▾</span>
+          </button>
+          <div class="stack-items">
+            <!-- Braver -->
+            <button class="skill-btn atb" data-combat-act="skill1" data-tip="ATB: Braver Cleave [1 / F]">
+              <svg viewBox="0 0 24 24"><polygon points="12 2 16 14 12 19 8 14"/><path d="M5 21h14"/><path d="M7 17l-3 4M17 17l3 4"/></svg>
+              <span class="sk-key">1</span>
+            </button>
+            <!-- Focused Thrust -->
+            <button class="skill-btn atb" data-combat-act="skill2" data-tip="ATB: Focused Thrust [2]">
+              <svg viewBox="0 0 24 24"><polyline points="4 8 10 12 4 16"/><polyline points="10 8 16 12 10 16"/><polyline points="16 8 22 12 16 16"/></svg>
+              <span class="sk-key">2</span>
+            </button>
+            <!-- Infinity Spin -->
+            <button class="skill-btn atb" data-combat-act="skill3" data-tip="ATB: Infinity Spin [3]">
+              <svg viewBox="0 0 24 24"><path d="M18.2 8A6 6 0 0 0 12 12a6 6 0 0 1-6.2 4 4 4 0 1 1 0-8c2.4 0 4.4 2 6.2 4 1.8 2 3.8 4 6.2 4a4 4 0 1 0 0-8z"/></svg>
+              <span class="sk-key">3</span>
+            </button>
+            <!-- Cross-Slash Limit Break -->
+            <button class="skill-btn limit" data-combat-act="limit" data-tip="LIMIT BREAK: Cross-Slash [I]">
+              <svg viewBox="0 0 24 24"><line x1="4" y1="4" x2="20" y2="20"/><line x1="20" y1="4" x2="4" y2="20"/><circle cx="12" cy="12" r="3.5"/></svg>
+              <span class="sk-key">I</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- STACK 4: ARCANE GRIMOIRE ARTS (Arcane Chain, Cast Spell) -->
+        <div class="sym-stack" data-stack-group="magic" data-theme="magic">
+          <button class="stack-toggle-btn" data-stack-toggle="magic" data-tip="Arcane Grimoire Stack (Click to Collapse/Expand)">
+            <svg viewBox="0 0 24 24"><polygon points="12 2 14.5 9.5 22 12 14.5 14.5 12 22 9.5 14.5 2 12 9.5 9.5"/></svg>
+            <span class="stack-chevron">▾</span>
+          </button>
+          <div class="stack-items">
+            <!-- Arcane Chain -->
+            <button class="skill-btn magic" data-combat-act="bolt" data-tip="Arcane Starbolt Chain [T]">
+              <svg viewBox="0 0 24 24"><circle cx="6" cy="17" r="2.2"/><circle cx="12" cy="11" r="2.5"/><circle cx="18" cy="5" r="2.8"/><line x1="7.8" y1="15.2" x2="16.2" y2="6.8"/></svg>
+              <span class="sk-key">T</span>
+            </button>
+            <!-- Cast Grimoire Spell -->
+            <button class="skill-btn magic" data-combat-act="grimoire" data-tip="Invoke Grimoire Spell [Y]">
+              <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="8"/><polygon points="12 5 17 15 7 15"/><polygon points="12 19 17 9 7 9"/></svg>
+              <span class="sk-key">Y</span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- [ESCAPE] SANCTUARY & TACTICAL SETTINGS MENU -->
+    <div id="hud-escape-modal" class="hidden">
+      <div class="escape-card">
+        <div class="escape-header">
+          <h2>SANCTUARY VESSEL, ARMORY &amp; SYMBOLIC CODEX</h2>
+          <button id="btn-close-escape">RESUME DUEL [ESC]</button>
+        </div>
+        <div class="escape-body">
+          <div style="display: flex; flex-direction: column; gap: 14px;">
+            <div class="esc-section" id="esc-difficulty-section">
+              <h3>CHOOSE TRIAL DIFFICULTY</h3>
+              <div id="esc-difficulty-list" class="selector-grid" role="group" aria-label="Trial difficulty"></div>
+              <p id="esc-difficulty-summary" class="esc-difficulty-summary">
+                Expert is the original balance of the Serpent's Spine.
+              </p>
+            </div>
+            <div class="esc-section">
+              <h3>SELECT INCARNATED VESSEL (HERO)</h3>
+              <div id="esc-hero-list" class="selector-grid"></div>
+            </div>
+            <div class="esc-section">
+              <h3>SELECT ARSENAL BLADE (WEAPON STYLE)</h3>
+              <div id="esc-weapon-list" class="selector-grid"></div>
+            </div>
+            <div class="esc-section">
+              <h3>ATTUNE GRIMOIRE SPELL</h3>
+              <div id="esc-spell-list" class="selector-grid"></div>
+            </div>
+          </div>
+
+          <div class="esc-section">
+            <h3>SYMBOLIC COMBAT &amp; LOCOMOTION CONTROLS</h3>
+            <div class="legend-grid">
+              <div class="legend-item"><kbd>ESC</kbd><span>Sanctuary Settings &amp; Difficulty</span></div>
+              <div class="legend-item"><kbd>O</kbd><span>Light &amp; Sky Settings</span></div>
+              <div class="legend-item"><kbd>`</kbd><span>Release Cursor for Action Crosses</span></div>
+              <div class="legend-item"><kbd>WASD</kbd><span>Move / 4-Way Lock-On Strafe</span></div>
+              <div class="legend-item"><kbd>Shift</kbd><span>Sprint (Tap: Mirage Roll)</span></div>
+              <div class="legend-item"><kbd>Space</kbd><span>Astral Leap / 2x Somersault</span></div>
+              <div class="legend-item"><kbd>LMB / J</kbd><span>Light Slash Combo (6-Hit)</span></div>
+              <div class="legend-item"><kbd>U</kbd><span>Heavy / Punisher Rend Combo</span></div>
+              <div class="legend-item"><kbd>RMB / K</kbd><span>Guard / 165ms Perfect Deflect</span></div>
+              <div class="legend-item"><kbd>Tab / X</kbd><span>Operator ↔ Punisher Stance</span></div>
+              <div class="legend-item"><kbd>Shift+J</kbd><span>Dash Cleave (Sprint Slash)</span></div>
+              <div class="legend-item"><kbd>R</kbd><span>Rising Cut (Undercut Launcher)</span></div>
+              <div class="legend-item"><kbd>V</kbd><span>Needle Stab (Piercing Thrust)</span></div>
+              <div class="legend-item"><kbd>C</kbd><span>Guard Break (Spartan Kick)</span></div>
+              <div class="legend-item"><kbd>B</kbd><span>Seam Counter (180° Backhand)</span></div>
+              <div class="legend-item"><kbd>Q</kbd><span>Leap Smash (Aerial Plunge)</span></div>
+              <div class="legend-item"><kbd>T</kbd><span>Arcane Chain (3-Hit Starbolt)</span></div>
+              <div class="legend-item"><kbd>Y / N</kbd><span>Cast / Cycle Grimoire Spell</span></div>
+              <div class="legend-item"><kbd>1 / 2 / 3 / 4</kbd><span>Braver / Thrust / Spin / Arcane Surge</span></div>
+              <div class="legend-item"><kbd>I</kbd><span>Limit Break: Cross-Slash</span></div>
+              <div class="legend-item"><kbd>H</kbd><span>Crimson Gourd (Cast Mend)</span></div>
+              <div class="legend-item"><kbd>P / Z</kbd><span>Cycle Hero Vessel / Blade</span></div>
+              <div class="legend-item"><kbd>G / M</kbd><span>Target Lock-On / Trail Map</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Full-Screen Interactive Tactical Trail Map Modal -->
+    <div id="hud-fullmap-modal" class="hidden">
+      <div class="fullmap-card">
+        <div class="fullmap-canvas-wrap">
+          <div class="fullmap-title-bar">
+            <h2>THE SERPENT'S SPINE — ARTERIAL TRAIL TOPOLOGY</h2>
+            <span style="font-size: 0.72rem; color: #a69d8e;">Click any Shrine Node or press [Alt+1–5 / F1–F5] to Fast-Travel</span>
+          </div>
+          <canvas id="hud-fullmap-canvas" width="680" height="540"></canvas>
+          <div class="fullmap-legend">
+            <span><i class="legend-dot" style="background: #ffbf47;"></i>Kindled Shrine</span>
+            <span><i class="legend-dot" style="background: #58c4ff;"></i>Unkindled Shrine</span>
+            <span><i class="legend-dot" style="background: #ff3a28;"></i>Apex / Gatekeeper Boss</span>
+            <span><i class="legend-dot" style="background: #ff9d3b;"></i>Corridor Sentinel</span>
+            <span><i class="legend-dot" style="background: #58b9a5;"></i>Zone 2 Left Branch (Wandering Wight)</span>
+          </div>
+        </div>
+        <div class="fullmap-sidebar">
+          <div class="sidebar-section">
+            <h3>SHRINE FAST-TRAVEL</h3>
+            <p class="sidebar-desc">
+              A dense inverted-U arterial trail winding through 5 vertical zones with zero dead space.
+              Obsidian Fog Seals lock each choke point until its guardians fall.
+            </p>
+            <div id="hud-shrine-list"></div>
+          </div>
+          <button id="btn-close-map">RESUME DUEL [M / ESC]</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script type="module" src="/src/main.js"></script>
+</body>
+</html>

@@ -1,0 +1,11 @@
+# Binary art and font files
+*.glb binary
+*.gltf binary
+*.bin binary
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.ttf binary
+*.ttc binary
+*.woff binary
+*.woff2 binary

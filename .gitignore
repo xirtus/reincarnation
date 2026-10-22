@@ -1,0 +1,26 @@
+# dependencies
+node_modules/
+
+# build output
+dist/
+.vite/
+
+# local captures, reports and profiling data
+output/
+tmp/
+playwright-report/
+test-results/
+*.log
+
+# OS / editor
+.DS_Store
+._*
+Thumbs.db
+*.swp
+.idea/
+.vscode/
+
+# environment / secrets
+.env
+.env.*
+!.env.example

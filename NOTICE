@@ -1,0 +1,14 @@
+Reincarnation: The Serpent's Spine
+Copyright (C) 2026 Andreas Xirtus
+
+The source code in this repository is free software: you can redistribute it and/or modify it under
+the terms of the GNU General Public License, version 3, as published by the Free Software Foundation.
+See LICENSE.
+
+EXCEPTION — ART ASSETS
+
+The art assets are not covered by the GPL. This includes, without limitation, everything in
+public/, and the font files in src/ui/fonts/ (which are under the SIL Open Font
+License 1.1). The art is fan-made and derivative work, included only for the reference build;
+all rights remain with the respective creators. No permission is granted to reuse the art
+separately. See ASSETS.md for details and contact information.

@@ -1,0 +1,690 @@
+{
+  "format": "Mixamo/Rosebud to Anima; metres, +Z, planar root motion owned by motor",
+  "bytes": 4523708,
+  "clips": [
+    {
+      "clip": "AA_Falling_Idle",
+      "pack": "Action Adventure Pack.zip",
+      "file": "falling idle.fbx",
+      "duration": 0.699999988079071,
+      "tracks": 45,
+      "stripTwist": false,
+      "repairedTracks": []
+    },
+    {
+      "clip": "AA_Falling_To_Roll",
+      "pack": "Action Adventure Pack.zip",
+      "file": "falling to roll.fbx",
+      "duration": 1.466670036315918,
+      "tracks": 45,
+      "stripTwist": false,
+      "repairedTracks": []
+    },
+    {
+      "clip": "AA_Hard_Landing",
+      "pack": "Action Adventure Pack.zip",
+      "file": "hard landing.fbx",
+      "duration": 2,
+      "tracks": 45,
+      "stripTwist": false,
+      "repairedTracks": []
+    },
+    {
+      "clip": "AA_Jump_Up",
+      "pack": "Action Adventure Pack.zip",
+      "file": "jumping up.fbx",
+      "duration": 0.23332999646663666,
+      "tracks": 45,
+      "stripTwist": false,
+      "repairedTracks": []
+    },
+    {
+      "clip": "AA_Turn_L",
+      "pack": "Action Adventure Pack.zip",
+      "file": "left turn.fbx",
+      "duration": 1.033329963684082,
+      "tracks": 45,
+      "stripTwist": true,
+      "repairedTracks": []
+    },
+    {
+      "clip": "AA_Turn_R",
+      "pack": "Action Adventure Pack.zip",
+      "file": "right turn.fbx",
+      "duration": 0.9666699767112732,
+      "tracks": 45,
+      "stripTwist": true,
+      "repairedTracks": []
+    },
+    {
+      "clip": "AA_Stand_To_Cover",
+      "pack": "Action Adventure Pack.zip",
+      "file": "stand to cover.fbx",
+      "duration": 1.13332998752594,
+      "tracks": 45,
+      "stripTwist": false,
+      "repairedTracks": []
+    },
+    {
+      "clip": "AA_Cover_To_Stand",
+      "pack": "Action Adventure Pack.zip",
+      "file": "cover to stand.fbx",
+      "duration": 1.5,
+      "tracks": 45,
+      "stripTwist": false,
+      "repairedTracks": []
+    },
+    {
+      "clip": "AA_Sneak_L",
+      "pack": "Action Adventure Pack.zip",
+      "file": "crouched sneaking left.fbx",
+      "duration": 1.2666699886322021,
+      "tracks": 45,
+      "stripTwist": false,
+      "repairedTracks": []
+    },
+    {
+      "clip": "AA_Sneak_R",
+      "pack": "Action Adventure Pack.zip",
+      "file": "crouched sneaking right.fbx",
+      "duration": 1.033329963684082,
+      "tracks": 45,
+      "stripTwist": false,
+      "repairedTracks": []
+    },
+    {
+      "clip": "Fem_Walk",
+      "pack": "Female Basic Locomotion Pack.zip",
+      "file": "walking.fbx",
+      "duration": 0.9666699767112732,
+      "tracks": 45,
+      "stripTwist": false,
+      "repairedTracks": []
+    },
+    {
+      "clip": "Fem_Run",
+      "pack": "Female Basic Locomotion Pack.zip",
+      "file": "running.fbx",
+      "duration": 0.699999988079071,
+      "tracks": 45,
+      "stripTwist": false,
+      "repairedTracks": []
+    },
+    {
+      "clip": "Fem_Jump",
+      "pack": "Female Basic Locomotion Pack.zip",
+      "file": "jump.fbx",
+      "duration": 1.5666699409484863,
+      "tracks": 45,
+      "stripTwist": false,
+      "repairedTracks": []
+    },
+    {
+      "clip": "Fem_Strafe_Run_L",
+      "pack": "Female Basic Locomotion Pack.zip",
+      "file": "left strafe.fbx",
+      "duration": 0.666670024394989,
+      "tracks": 45,
+      "stripTwist": false,
+      "repairedTracks": []
+    },
+    {
+      "clip": "Fem_Strafe_Run_R",
+      "pack": "Female Basic Locomotion Pack.zip",
+      "file": "right strafe.fbx",
+      "duration": 0.666670024394989,
+      "tracks": 45,
+      "stripTwist": false,
+      "repairedTracks": []
+    },
+    {
+      "clip": "Fem_Strafe_Walk_L",
+      "pack": "Female Basic Locomotion Pack.zip",
+      "file": "left strafe walk.fbx",
+      "duration": 0.9333299994468689,
+      "tracks": 45,
+      "stripTwist": false,
+      "repairedTracks": []
+    },
+    {
+      "clip": "Fem_Strafe_Walk_R",
+      "pack": "Female Basic Locomotion Pack.zip",
+      "file": "right strafe walk.fbx",
+      "duration": 0.9333299994468689,
+      "tracks": 45,
+      "stripTwist": false,
+      "repairedTracks": []
+    },
+    {
+      "clip": "Fem_Pivot_L",
+      "pack": "Female Basic Locomotion Pack.zip",
+      "file": "left turn (2).fbx",
+      "duration": 1.1666699647903442,
+      "tracks": 45,
+      "stripTwist": true,
+      "repairedTracks": []
+    },
+    {
+      "clip": "Fem_Pivot_R",
+      "pack": "Female Basic Locomotion Pack.zip",
+      "file": "right turn (2).fbx",
+      "duration": 1.1666699647903442,
+      "tracks": 45,
+      "stripTwist": true,
+      "repairedTracks": []
+    },
+    {
+      "clip": "Turn_Left_90",
+      "pack": "Pro Magic Pack.zip",
+      "file": "Standing Turn Left 90.fbx",
+      "duration": 1.600000023841858,
+      "tracks": 45,
+      "stripTwist": true,
+      "repairedTracks": []
+    },
+    {
+      "clip": "Turn_Right_90",
+      "pack": "Pro Magic Pack.zip",
+      "file": "Standing Turn Right 90.fbx",
+      "duration": 1.63332998752594,
+      "tracks": 45,
+      "stripTwist": true,
+      "repairedTracks": []
+    },
+    {
+      "clip": "Crouch_Turn_Left_90",
+      "pack": "Pro Magic Pack.zip",
+      "file": "Crouch Turn Left 90.fbx",
+      "duration": 1.7999999523162842,
+      "tracks": 45,
+      "stripTwist": true,
+      "repairedTracks": []
+    },
+    {
+      "clip": "Crouch_Turn_Right_90",
+      "pack": "Pro Magic Pack.zip",
+      "file": "Crouch Turn Right 90.fbx",
+      "duration": 1.600000023841858,
+      "tracks": 45,
+      "stripTwist": true,
+      "repairedTracks": []
+    },
+    {
+      "clip": "Walk_Back",
+      "pack": "Pro Magic Pack.zip",
+      "file": "Standing Walk Back.fbx",
+      "duration": 1.2000000476837158,
+      "tracks": 45,
+      "stripTwist": false,
+      "repairedTracks": []
+    },
+    {
+      "clip": "Walk_Left",
+      "pack": "Pro Magic Pack.zip",
+      "file": "Standing Walk Left.fbx",
+      "duration": 1.1666699647903442,
+      "tracks": 45,
+      "stripTwist": false,
+      "repairedTracks": []
+    },
+    {
+      "clip": "Walk_Right",
+      "pack": "Pro Magic Pack.zip",
+      "file": "Standing Walk Right.fbx",
+      "duration": 1.2000000476837158,
+      "tracks": 45,
+      "stripTwist": false,
+      "repairedTracks": []
+    },
+    {
+      "clip": "Run_Back",
+      "pack": "Pro Magic Pack.zip",
+      "file": "Standing Run Back.fbx",
+      "duration": 0.6333299875259399,
+      "tracks": 45,
+      "stripTwist": false,
+      "repairedTracks": []
+    },
+    {
+      "clip": "Run_Left",
+      "pack": "Pro Magic Pack.zip",
+      "file": "Standing Run Left.fbx",
+      "duration": 0.7666699886322021,
+      "tracks": 45,
+      "stripTwist": false,
+      "repairedTracks": []
+    },
+    {
+      "clip": "Run_Right",
+      "pack": "Pro Magic Pack.zip",
+      "file": "Standing Run Right.fbx",
+      "duration": 0.7666699886322021,
+      "tracks": 45,
+      "stripTwist": false,
+      "repairedTracks": []
+    },
+    {
+      "clip": "Jump_Land_Run",
+      "pack": "Pro Magic Pack.zip",
+      "file": "Standing Jump Running Landing.fbx",
+      "duration": 1.36667001247406,
+      "tracks": 45,
+      "stripTwist": false,
+      "repairedTracks": []
+    },
+    {
+      "clip": "Land_To_Idle",
+      "pack": "Pro Magic Pack.zip",
+      "file": "Standing Land To Standing Idle.fbx",
+      "duration": 1.100000023841858,
+      "tracks": 45,
+      "stripTwist": false,
+      "repairedTracks": []
+    },
+    {
+      "clip": "SnS_180_Turn",
+      "pack": "Pro Sword and Shield Pack.zip",
+      "file": "sword and shield 180 turn.fbx",
+      "duration": 0.800000011920929,
+      "tracks": 45,
+      "stripTwist": true,
+      "repairedTracks": []
+    },
+    {
+      "clip": "SnS_Turn_L",
+      "pack": "Pro Sword and Shield Pack.zip",
+      "file": "sword and shield turn.fbx",
+      "duration": 0.8666700124740601,
+      "tracks": 45,
+      "stripTwist": true,
+      "repairedTracks": []
+    },
+    {
+      "clip": "SnS_Turn_R",
+      "pack": "Pro Sword and Shield Pack.zip",
+      "file": "sword and shield turn (2).fbx",
+      "duration": 0.9333299994468689,
+      "tracks": 45,
+      "stripTwist": true,
+      "repairedTracks": []
+    },
+    {
+      "clip": "SnS_Strafe_L",
+      "pack": "Pro Sword and Shield Pack.zip",
+      "file": "sword and shield strafe.fbx",
+      "duration": 1.13332998752594,
+      "tracks": 45,
+      "stripTwist": false,
+      "repairedTracks": []
+    },
+    {
+      "clip": "SnS_Strafe_R",
+      "pack": "Pro Sword and Shield Pack.zip",
+      "file": "sword and shield strafe (2).fbx",
+      "duration": 1.2999999523162842,
+      "tracks": 45,
+      "stripTwist": false,
+      "repairedTracks": []
+    },
+    {
+      "clip": "SnS_Slash_Spin",
+      "pack": "Pro Sword and Shield Pack.zip",
+      "file": "sword and shield slash (2).fbx",
+      "duration": 3.533329963684082,
+      "tracks": 45,
+      "stripTwist": false,
+      "repairedTracks": []
+    },
+    {
+      "clip": "SnS_Slash_Combo",
+      "pack": "Pro Sword and Shield Pack.zip",
+      "file": "sword and shield slash (4).fbx",
+      "duration": 2.299999952316284,
+      "tracks": 45,
+      "stripTwist": false,
+      "repairedTracks": []
+    },
+    {
+      "clip": "SnS_Crouch_Slash",
+      "pack": "Pro Sword and Shield Pack.zip",
+      "file": "sword and shield slash (5).fbx",
+      "duration": 1.36667001247406,
+      "tracks": 45,
+      "stripTwist": false,
+      "repairedTracks": []
+    },
+    {
+      "clip": "SnS_Attack_1",
+      "pack": "Pro Sword and Shield Pack.zip",
+      "file": "sword and shield attack.fbx",
+      "duration": 2.333329916000366,
+      "tracks": 45,
+      "stripTwist": false,
+      "repairedTracks": []
+    },
+    {
+      "clip": "SnS_Attack_2",
+      "pack": "Pro Sword and Shield Pack.zip",
+      "file": "sword and shield attack (2).fbx",
+      "duration": 1.2999999523162842,
+      "tracks": 45,
+      "stripTwist": false,
+      "repairedTracks": []
+    },
+    {
+      "clip": "SnS_Attack_4",
+      "pack": "Pro Sword and Shield Pack.zip",
+      "file": "sword and shield attack (4).fbx",
+      "duration": 1,
+      "tracks": 45,
+      "stripTwist": false,
+      "repairedTracks": []
+    },
+    {
+      "clip": "SnS_Shield_Kick",
+      "pack": "Pro Sword and Shield Pack.zip",
+      "file": "sword and shield kick.fbx",
+      "duration": 1.2000000476837158,
+      "tracks": 45,
+      "stripTwist": false,
+      "repairedTracks": []
+    },
+    {
+      "clip": "SnS_Power_Up",
+      "pack": "Pro Sword and Shield Pack.zip",
+      "file": "sword and shield power up.fbx",
+      "duration": 2.3666698932647705,
+      "tracks": 45,
+      "stripTwist": false,
+      "repairedTracks": []
+    },
+    {
+      "clip": "SnS_Cast",
+      "pack": "Pro Sword and Shield Pack.zip",
+      "file": "sword and shield casting.fbx",
+      "duration": 2.966670036315918,
+      "tracks": 45,
+      "stripTwist": false,
+      "repairedTracks": []
+    },
+    {
+      "clip": "SnS_Death_1",
+      "pack": "Pro Sword and Shield Pack.zip",
+      "file": "sword and shield death.fbx",
+      "duration": 2.299999952316284,
+      "tracks": 45,
+      "stripTwist": false,
+      "repairedTracks": []
+    },
+    {
+      "clip": "SnS_Death_2",
+      "pack": "Pro Sword and Shield Pack.zip",
+      "file": "sword and shield death (2).fbx",
+      "duration": 3.9000000953674316,
+      "tracks": 45,
+      "stripTwist": false,
+      "repairedTracks": []
+    },
+    {
+      "clip": "GS_180_Turn",
+      "pack": "Great Sword Pack.zip",
+      "file": "great sword 180 turn.fbx",
+      "duration": 0.800000011920929,
+      "tracks": 45,
+      "stripTwist": true,
+      "repairedTracks": []
+    },
+    {
+      "clip": "GS_Turn_L",
+      "pack": "Great Sword Pack.zip",
+      "file": "great sword turn.fbx",
+      "duration": 0.7333300113677979,
+      "tracks": 45,
+      "stripTwist": true,
+      "repairedTracks": []
+    },
+    {
+      "clip": "GS_Turn_R",
+      "pack": "Great Sword Pack.zip",
+      "file": "great sword turn (2).fbx",
+      "duration": 0.833329975605011,
+      "tracks": 45,
+      "stripTwist": true,
+      "repairedTracks": []
+    },
+    {
+      "clip": "GS_Strafe_L",
+      "pack": "Great Sword Pack.zip",
+      "file": "great sword strafe.fbx",
+      "duration": 1.100000023841858,
+      "tracks": 45,
+      "stripTwist": false,
+      "repairedTracks": []
+    },
+    {
+      "clip": "GS_Strafe_R",
+      "pack": "Great Sword Pack.zip",
+      "file": "great sword strafe (2).fbx",
+      "duration": 1.1666699647903442,
+      "tracks": 45,
+      "stripTwist": false,
+      "repairedTracks": []
+    },
+    {
+      "clip": "GS_Jump_Attack",
+      "pack": "Great Sword Pack.zip",
+      "file": "great sword jump attack.fbx",
+      "duration": 2.166670083999634,
+      "tracks": 45,
+      "stripTwist": false,
+      "repairedTracks": []
+    },
+    {
+      "clip": "GS_Slide_Attack",
+      "pack": "Great Sword Pack.zip",
+      "file": "great sword slide attack.fbx",
+      "duration": 2.1333301067352295,
+      "tracks": 45,
+      "stripTwist": false,
+      "repairedTracks": []
+    },
+    {
+      "clip": "GS_High_Spin",
+      "pack": "Great Sword Pack.zip",
+      "file": "great sword high spin attack.fbx",
+      "duration": 1.86667001247406,
+      "tracks": 45,
+      "stripTwist": false,
+      "repairedTracks": []
+    },
+    {
+      "clip": "GS_Kick",
+      "pack": "Great Sword Pack.zip",
+      "file": "great sword kick.fbx",
+      "duration": 1.5,
+      "tracks": 45,
+      "stripTwist": false,
+      "repairedTracks": []
+    },
+    {
+      "clip": "GS_Power_Up",
+      "pack": "Great Sword Pack.zip",
+      "file": "great sword power up.fbx",
+      "duration": 3.0999999046325684,
+      "tracks": 45,
+      "stripTwist": false,
+      "repairedTracks": []
+    },
+    {
+      "clip": "GS_Cast",
+      "pack": "Great Sword Pack.zip",
+      "file": "great sword casting.fbx",
+      "duration": 4.800000190734863,
+      "tracks": 45,
+      "stripTwist": false,
+      "repairedTracks": []
+    },
+    {
+      "clip": "GS_Death_1",
+      "pack": "Great Sword Pack.zip",
+      "file": "two handed sword death.fbx",
+      "duration": 2.4000000953674316,
+      "tracks": 45,
+      "stripTwist": false,
+      "repairedTracks": []
+    },
+    {
+      "clip": "GS_Death_2",
+      "pack": "Great Sword Pack.zip",
+      "file": "two handed sword death (2).fbx",
+      "duration": 2.333329916000366,
+      "tracks": 45,
+      "stripTwist": false,
+      "repairedTracks": []
+    },
+    {
+      "clip": "rollDodge",
+      "pack": "player-moves-retargeted.json",
+      "file": "rollDodge",
+      "duration": 1.7999999523162842,
+      "tracks": 45,
+      "stripTwist": false,
+      "repairedTracks": []
+    },
+    {
+      "clip": "rollQuick",
+      "pack": "player-moves-retargeted.json",
+      "file": "rollQuick",
+      "duration": 1.399999976158142,
+      "tracks": 45,
+      "stripTwist": false,
+      "repairedTracks": []
+    },
+    {
+      "clip": "rollStand",
+      "pack": "player-moves-retargeted.json",
+      "file": "rollStand",
+      "duration": 2.3666999340057373,
+      "tracks": 45,
+      "stripTwist": false,
+      "repairedTracks": []
+    },
+    {
+      "clip": "rollDive",
+      "pack": "player-moves-retargeted.json",
+      "file": "rollDive",
+      "duration": 3.933300018310547,
+      "tracks": 45,
+      "stripTwist": false,
+      "repairedTracks": []
+    },
+    {
+      "clip": "rollFall",
+      "pack": "player-moves-retargeted.json",
+      "file": "rollFall",
+      "duration": 1.4666999578475952,
+      "tracks": 45,
+      "stripTwist": false,
+      "repairedTracks": []
+    },
+    {
+      "clip": "flip",
+      "pack": "player-moves-retargeted.json",
+      "file": "flip",
+      "duration": 2.266700029373169,
+      "tracks": 45,
+      "stripTwist": false,
+      "repairedTracks": []
+    },
+    {
+      "clip": "leap",
+      "pack": "player-moves-retargeted.json",
+      "file": "leap",
+      "duration": 2.6333000659942627,
+      "tracks": 45,
+      "stripTwist": false,
+      "repairedTracks": []
+    },
+    {
+      "clip": "wallJump",
+      "pack": "player-moves-retargeted.json",
+      "file": "wallJump",
+      "duration": 1.266700029373169,
+      "tracks": 45,
+      "stripTwist": false,
+      "repairedTracks": []
+    },
+    {
+      "clip": "superLanding",
+      "pack": "player-moves-retargeted.json",
+      "file": "superLanding",
+      "duration": 2.6333000659942627,
+      "tracks": 45,
+      "stripTwist": false,
+      "repairedTracks": []
+    },
+    {
+      "clip": "hardLanding",
+      "pack": "player-moves-retargeted.json",
+      "file": "hardLanding",
+      "duration": 1.7999999523162842,
+      "tracks": 45,
+      "stripTwist": false,
+      "repairedTracks": []
+    },
+    {
+      "clip": "fallingIdle",
+      "pack": "player-moves-retargeted.json",
+      "file": "fallingIdle",
+      "duration": 0.666700005531311,
+      "tracks": 45,
+      "stripTwist": false,
+      "repairedTracks": []
+    },
+    {
+      "clip": "fallingFlail",
+      "pack": "player-moves-retargeted.json",
+      "file": "fallingFlail",
+      "duration": 4.5,
+      "tracks": 45,
+      "stripTwist": false,
+      "repairedTracks": []
+    },
+    {
+      "clip": "downShoulder",
+      "pack": "player-moves-retargeted.json",
+      "file": "downShoulder",
+      "duration": 3.0999999046325684,
+      "tracks": 45,
+      "stripTwist": false,
+      "repairedTracks": []
+    },
+    {
+      "clip": "downStumble",
+      "pack": "player-moves-retargeted.json",
+      "file": "downStumble",
+      "duration": 3.3333001136779785,
+      "tracks": 45,
+      "stripTwist": false,
+      "repairedTracks": []
+    },
+    {
+      "clip": "fallFlat",
+      "pack": "player-moves-retargeted.json",
+      "file": "fallFlat",
+      "duration": 1.5666999816894531,
+      "tracks": 45,
+      "stripTwist": false,
+      "repairedTracks": []
+    },
+    {
+      "clip": "stumbleBack",
+      "pack": "player-moves-retargeted.json",
+      "file": "stumbleBack",
+      "duration": 3.3333001136779785,
+      "tracks": 45,
+      "stripTwist": false,
+      "repairedTracks": []
+    }
+  ]
+}

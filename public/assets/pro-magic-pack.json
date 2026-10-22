@@ -1,0 +1,117 @@
+{
+  "bytes": 1437372,
+  "clips": [
+    {
+      "clip": "Magic_1H_Cast",
+      "file": "standing 1H cast spell 01.fbx",
+      "duration": 2.267,
+      "tracks": 45,
+      "repairedTracks": []
+    },
+    {
+      "clip": "Magic_1H_Attack_1",
+      "file": "Standing 1H Magic Attack 01.fbx",
+      "duration": 2.3,
+      "tracks": 45,
+      "repairedTracks": []
+    },
+    {
+      "clip": "Magic_1H_Attack_2",
+      "file": "Standing 1H Magic Attack 02.fbx",
+      "duration": 2.2,
+      "tracks": 45,
+      "repairedTracks": []
+    },
+    {
+      "clip": "Magic_1H_Attack_3",
+      "file": "Standing 1H Magic Attack 03.fbx",
+      "duration": 2.3,
+      "tracks": 45,
+      "repairedTracks": []
+    },
+    {
+      "clip": "Magic_2H_Area_1",
+      "file": "Standing 2H Magic Area Attack 01.fbx",
+      "duration": 2.967,
+      "tracks": 45,
+      "repairedTracks": []
+    },
+    {
+      "clip": "Magic_2H_Attack_2",
+      "file": "Standing 2H Magic Attack 02.fbx",
+      "duration": 2.633,
+      "tracks": 45,
+      "repairedTracks": []
+    },
+    {
+      "clip": "Magic_2H_Attack_3",
+      "file": "Standing 2H Magic Attack 03.fbx",
+      "duration": 4.267,
+      "tracks": 45,
+      "repairedTracks": []
+    },
+    {
+      "clip": "Magic_2H_Attack_4",
+      "file": "Standing 2H Magic Attack 04.fbx",
+      "duration": 3.333,
+      "tracks": 45,
+      "repairedTracks": []
+    },
+    {
+      "clip": "Magic_2H_Attack_5",
+      "file": "Standing 2H Magic Attack 05.fbx",
+      "duration": 3.433,
+      "tracks": 45,
+      "repairedTracks": []
+    },
+    {
+      "clip": "Death_Forward",
+      "file": "Standing React Death Forward.fbx",
+      "duration": 3.667,
+      "tracks": 45,
+      "repairedTracks": []
+    },
+    {
+      "clip": "Death_Left",
+      "file": "Standing React Death Left.fbx",
+      "duration": 3.4,
+      "tracks": 45,
+      "repairedTracks": []
+    },
+    {
+      "clip": "Death_Right",
+      "file": "Standing React Death Right.fbx",
+      "duration": 3.5,
+      "tracks": 45,
+      "repairedTracks": []
+    },
+    {
+      "clip": "Hurt_Large_Front",
+      "file": "Standing React Large From Front.fbx",
+      "duration": 1.367,
+      "tracks": 45,
+      "repairedTracks": []
+    },
+    {
+      "clip": "Hurt_Large_Back",
+      "file": "Standing React Large From Back.fbx",
+      "duration": 1.667,
+      "tracks": 45,
+      "repairedTracks": []
+    },
+    {
+      "clip": "Hurt_Large_Left",
+      "file": "Standing React Large From Left.fbx",
+      "duration": 1.333,
+      "tracks": 45,
+      "repairedTracks": []
+    },
+    {
+      "clip": "Hurt_Large_Right",
+      "file": "Standing React Large From Right.fbx",
+      "duration": 1.633,
+      "tracks": 45,
+      "repairedTracks": []
+    }
+  ]
+}

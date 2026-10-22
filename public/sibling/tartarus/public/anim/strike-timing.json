@@ -1,0 +1,299 @@
+{
+ "generator": "scripts/measure-strikes.mjs",
+ "clips": {
+  "rpg2HandBaseAttackA1": {
+   "hit": [
+    [
+     0.245,
+     0.336
+    ]
+   ],
+   "peak": 12.1,
+   "duration": 1.833
+  },
+  "rpg2HandBaseAttackA2Combo": {
+   "hit": [
+    [
+     0.221,
+     0.291
+    ]
+   ],
+   "peak": 12.1,
+   "duration": 1.433
+  },
+  "rpg2HandBaseAttackA3Combo": {
+   "hit": [
+    [
+     0.202,
+     0.287
+    ]
+   ],
+   "peak": 13.6,
+   "duration": 1.567
+  },
+  "rpg2HandBaseAttackA4Combo": {
+   "hit": [
+    [
+     0.167,
+     0.245
+    ]
+   ],
+   "peak": 15.2,
+   "duration": 1.7
+  },
+  "rpg2HandBaseAttackA5Combo": {
+   "hit": [
+    [
+     0.106,
+     0.144
+    ]
+   ],
+   "peak": 19.9,
+   "duration": 1.733
+  },
+  "rpg2HandBaseAttackA6Combo": {
+   "hit": [
+    [
+     0.147,
+     0.259
+    ]
+   ],
+   "peak": 11.2,
+   "duration": 1.933
+  },
+  "rpg2HandBaseAttackB1": {
+   "hit": [
+    [
+     0.264,
+     0.336
+    ]
+   ],
+   "peak": 13.4,
+   "duration": 1.833
+  },
+  "rpg2HandBaseAttackB2Combo": {
+   "hit": [
+    [
+     0.167,
+     0.272
+    ]
+   ],
+   "peak": 10.8,
+   "duration": 1.9
+  },
+  "rpg2HandBaseAttackB3Combo": {
+   "hit": [
+    [
+     0.183,
+     0.279
+    ]
+   ],
+   "peak": 13.7,
+   "duration": 1.733
+  },
+  "rpg2HandBaseAttackB4Combo": {
+   "hit": [
+    [
+     0.117,
+     0.191
+    ]
+   ],
+   "peak": 13.9,
+   "duration": 1.567
+  },
+  "rpg2HandBaseAttackB5Combo": {
+   "hit": [
+    [
+     0.079,
+     0.254
+    ]
+   ],
+   "peak": 11.3,
+   "duration": 1.9
+  },
+  "rpg2HandBaseAttackC2To1": {
+   "hit": [
+    [
+     0.221,
+     0.314
+    ]
+   ],
+   "peak": 11.1,
+   "duration": 1.433
+  },
+  "rpg2HandBaseJumpAttack1": {
+   "hit": [
+    [
+     0.417,
+     0.617
+    ]
+   ],
+   "peak": 9.9,
+   "duration": 1
+  },
+  "rpg2HandBaseAttackDash1": {
+   "hit": [
+    [
+     0.35,
+     0.393
+    ]
+   ],
+   "peak": 17,
+   "duration": 2.333
+  },
+  "rpg2HandBaseSkill1": {
+   "hit": [
+    [
+     0.382,
+     0.441
+    ]
+   ],
+   "peak": 16.7,
+   "duration": 2.833
+  },
+  "rpg2HandBaseSkill2": {
+   "hit": [
+    [
+     0.493,
+     0.553
+    ]
+   ],
+   "peak": 7.2,
+   "duration": 2.5
+  },
+  "rpg2HandBaseSkill3": {
+   "hit": [
+    [
+     0.108,
+     0.392
+    ],
+    [
+     0.6,
+     0.658
+    ]
+   ],
+   "peak": 7.3,
+   "duration": 2
+  },
+  "gsGreatSwordPowerUp": {
+   "hit": [
+    [
+     0.35,
+     0.55
+    ]
+   ],
+   "peak": 1.2,
+   "duration": 3
+  },
+  "gsGreatSwordHighSpinAttack": {
+   "hit": [
+    [
+     0.268,
+     0.402
+    ],
+    [
+     0.491,
+     0.705
+    ]
+   ],
+   "peak": 5.7,
+   "duration": 1.867
+  },
+  "rpgEnemyAttack1": {
+   "hit": [
+    [
+     0.162,
+     0.285
+    ]
+   ],
+   "peak": 12.8,
+   "duration": 2.167
+  },
+  "rpgEnemyAttack2": {
+   "hit": [
+    [
+     0.079,
+     0.175
+    ],
+    [
+     0.237,
+     0.342
+    ]
+   ],
+   "peak": 11.3,
+   "duration": 1.9
+  },
+  "rpgEnemyAttack31": {
+   "hit": [
+    [
+     0.331,
+     0.392
+    ]
+   ],
+   "peak": 17.6,
+   "duration": 2.167
+  },
+  "rpgEnemyAttack32": {
+   "hit": [
+    [
+     0.342,
+     0.392
+    ]
+   ],
+   "peak": 13.6,
+   "duration": 2
+  },
+  "rpgEnemyAttack42": {
+   "hit": [
+    [
+     0.343,
+     0.48
+    ]
+   ],
+   "peak": 13.6,
+   "duration": 1.7
+  },
+  "rpgEnemyAttack5": {
+   "hit": [
+    [
+     0.206,
+     0.331
+    ],
+    [
+     0.431,
+     0.506
+    ]
+   ],
+   "peak": 14.1,
+   "duration": 2.667
+  },
+  "rpgEnemyAttack4All": {
+   "hit": [
+    [
+     0.25,
+     0.377
+    ],
+    [
+     0.486,
+     0.514
+    ],
+    [
+     0.641,
+     0.677
+    ]
+   ],
+   "peak": 18.2,
+   "duration": 3.667
+  },
+  "rpgEnemyAttack2Run": {
+   "hit": [
+    [
+     0.331,
+     0.423
+    ]
+   ],
+   "peak": 11.2,
+   "duration": 2.167
+  }
+ }
+}

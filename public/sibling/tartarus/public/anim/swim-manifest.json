@@ -1,0 +1,357 @@
+{
+ "generator": "scripts/bake-swim.mjs",
+ "bundle": {
+  "url": "swim.json",
+  "milestone": "M1",
+  "fps": 24,
+  "about": "Suprasurfer's swim strokes (Xtricky's MT set): tread, float, breaststroke, crawl, under-water breaststroke, kick, dive, ascend",
+  "clips": 16,
+  "bytes": 164198
+ },
+ "clips": [
+  {
+   "id": "swimTread",
+   "bundle": "swim",
+   "stance": "swim",
+   "kind": "tread",
+   "source": "suprasurfer swimming-library.glb Tread",
+   "pose": "upright",
+   "duration": 1.625,
+   "loop": true,
+   "speed": 0,
+   "heading": null,
+   "travel": {
+    "x": 0,
+    "y": 0,
+    "z": 0,
+    "yaw": 0
+   },
+   "pelvis": 1.021,
+   "drift": 0
+  },
+  {
+   "id": "swimFloatForward",
+   "bundle": "swim",
+   "stance": "swim",
+   "kind": "float",
+   "dir": "F",
+   "source": "suprasurfer swimming-library.glb Float_Forward",
+   "pose": "upright",
+   "duration": 1.625,
+   "loop": true,
+   "speed": 0,
+   "heading": null,
+   "travel": {
+    "x": 0,
+    "y": 0,
+    "z": 0,
+    "yaw": 0
+   },
+   "pelvis": 1.017,
+   "drift": 0
+  },
+  {
+   "id": "swimFloatBackward",
+   "bundle": "swim",
+   "stance": "swim",
+   "kind": "float",
+   "dir": "B",
+   "source": "suprasurfer swimming-library.glb Float_Backward",
+   "pose": "upright",
+   "duration": 1.25,
+   "loop": true,
+   "speed": 0,
+   "heading": null,
+   "travel": {
+    "x": 0,
+    "y": 0,
+    "z": 0,
+    "yaw": 0
+   },
+   "pelvis": 1.029,
+   "drift": 0
+  },
+  {
+   "id": "swimSurfaceBreast",
+   "bundle": "swim",
+   "stance": "swim",
+   "kind": "surface",
+   "stroke": "breast",
+   "dir": "F",
+   "source": "suprasurfer swimming-library.glb Surface_Breast",
+   "pose": "low",
+   "duration": 1.5833,
+   "loop": true,
+   "speed": 0,
+   "heading": null,
+   "travel": {
+    "x": 0,
+    "y": 0,
+    "z": 0,
+    "yaw": 0
+   },
+   "pelvis": 0.979,
+   "drift": 0
+  },
+  {
+   "id": "swimSurfaceBreastLeft",
+   "bundle": "swim",
+   "stance": "swim",
+   "kind": "surface",
+   "stroke": "breast",
+   "dir": "L",
+   "source": "suprasurfer swimming-library.glb Surface_Breast_Left",
+   "pose": "low",
+   "duration": 1.5833,
+   "loop": true,
+   "speed": 0,
+   "heading": null,
+   "travel": {
+    "x": 0,
+    "y": 0,
+    "z": 0,
+    "yaw": 0
+   },
+   "pelvis": 0.979,
+   "drift": 0
+  },
+  {
+   "id": "swimSurfaceBreastRight",
+   "bundle": "swim",
+   "stance": "swim",
+   "kind": "surface",
+   "stroke": "breast",
+   "dir": "R",
+   "source": "suprasurfer swimming-library.glb Surface_Breast_Right",
+   "pose": "low",
+   "duration": 1.5833,
+   "loop": true,
+   "speed": 0,
+   "heading": null,
+   "travel": {
+    "x": 0,
+    "y": 0,
+    "z": 0,
+    "yaw": 0
+   },
+   "pelvis": 0.979,
+   "drift": 0
+  },
+  {
+   "id": "swimSurfaceBreastDown",
+   "bundle": "swim",
+   "stance": "swim",
+   "kind": "surface",
+   "stroke": "breast",
+   "dir": "D",
+   "source": "suprasurfer swimming-library.glb Surface_Breast_Down",
+   "pose": "low",
+   "duration": 1.5833,
+   "loop": true,
+   "speed": 0,
+   "heading": null,
+   "travel": {
+    "x": 0,
+    "y": 0,
+    "z": 0,
+    "yaw": 0
+   },
+   "pelvis": 0.979,
+   "drift": 0
+  },
+  {
+   "id": "swimCrawl",
+   "bundle": "swim",
+   "stance": "swim",
+   "kind": "surface",
+   "stroke": "crawl",
+   "dir": "F",
+   "source": "suprasurfer swimming-library.glb Crawl",
+   "pose": "low",
+   "duration": 2.4167,
+   "loop": true,
+   "speed": 0,
+   "heading": null,
+   "travel": {
+    "x": 0,
+    "y": 0,
+    "z": 0,
+    "yaw": 0
+   },
+   "pelvis": 0.98,
+   "drift": 0
+  },
+  {
+   "id": "swimCrawlLeft",
+   "bundle": "swim",
+   "stance": "swim",
+   "kind": "surface",
+   "stroke": "crawl",
+   "dir": "L",
+   "source": "suprasurfer swimming-library.glb Crawl_Left",
+   "pose": "low",
+   "duration": 1.2083,
+   "loop": true,
+   "speed": 0,
+   "heading": null,
+   "travel": {
+    "x": 0,
+    "y": 0,
+    "z": 0,
+    "yaw": 0
+   },
+   "pelvis": 0.98,
+   "drift": 0
+  },
+  {
+   "id": "swimCrawlRight",
+   "bundle": "swim",
+   "stance": "swim",
+   "kind": "surface",
+   "stroke": "crawl",
+   "dir": "R",
+   "source": "suprasurfer swimming-library.glb Crawl_Right",
+   "pose": "low",
+   "duration": 1.2083,
+   "loop": true,
+   "speed": 0,
+   "heading": null,
+   "travel": {
+    "x": 0,
+    "y": 0,
+    "z": 0,
+    "yaw": 0
+   },
+   "pelvis": 0.98,
+   "drift": 0
+  },
+  {
+   "id": "swimUnderBreast",
+   "bundle": "swim",
+   "stance": "swim",
+   "kind": "under",
+   "stroke": "breast",
+   "dir": "F",
+   "source": "suprasurfer swimming-library.glb Under_Breast",
+   "pose": "low",
+   "duration": 1.6667,
+   "loop": true,
+   "speed": 0,
+   "heading": null,
+   "travel": {
+    "x": 0,
+    "y": 0,
+    "z": 0,
+    "yaw": 0
+   },
+   "pelvis": 0.979,
+   "drift": 0
+  },
+  {
+   "id": "swimKickForward",
+   "bundle": "swim",
+   "stance": "swim",
+   "kind": "under",
+   "stroke": "kick",
+   "dir": "F",
+   "source": "suprasurfer swimming-library.glb Kick_Forward",
+   "pose": "low",
+   "duration": 1.2083,
+   "loop": true,
+   "speed": 0,
+   "heading": null,
+   "travel": {
+    "x": 0,
+    "y": 0,
+    "z": 0,
+    "yaw": 0
+   },
+   "pelvis": 0.98,
+   "drift": 0
+  },
+  {
+   "id": "swimKickLeft",
+   "bundle": "swim",
+   "stance": "swim",
+   "kind": "under",
+   "stroke": "kick",
+   "dir": "L",
+   "source": "suprasurfer swimming-library.glb Kick_Left",
+   "pose": "low",
+   "duration": 1.2083,
+   "loop": true,
+   "speed": 0,
+   "heading": null,
+   "travel": {
+    "x": 0,
+    "y": 0,
+    "z": 0,
+    "yaw": 0
+   },
+   "pelvis": 0.98,
+   "drift": 0
+  },
+  {
+   "id": "swimKickRight",
+   "bundle": "swim",
+   "stance": "swim",
+   "kind": "under",
+   "stroke": "kick",
+   "dir": "R",
+   "source": "suprasurfer swimming-library.glb Kick_Right",
+   "pose": "low",
+   "duration": 1.2083,
+   "loop": true,
+   "speed": 0,
+   "heading": null,
+   "travel": {
+    "x": 0,
+    "y": 0,
+    "z": 0,
+    "yaw": 0
+   },
+   "pelvis": 0.98,
+   "drift": 0
+  },
+  {
+   "id": "swimDive",
+   "bundle": "swim",
+   "stance": "swim",
+   "kind": "dive",
+   "source": "suprasurfer swimming-library.glb Dive",
+   "pose": "low",
+   "duration": 1.2083,
+   "loop": true,
+   "speed": 0,
+   "heading": null,
+   "travel": {
+    "x": 0,
+    "y": 0,
+    "z": 0,
+    "yaw": 0
+   },
+   "pelvis": 0.98,
+   "drift": 0
+  },
+  {
+   "id": "swimAscend",
+   "bundle": "swim",
+   "stance": "swim",
+   "kind": "ascend",
+   "source": "suprasurfer swimming-library.glb Ascend",
+   "pose": "low",
+   "duration": 1.2083,
+   "loop": true,
+   "speed": 0,
+   "heading": null,
+   "travel": {
+    "x": 0,
+    "y": 0,
+    "z": 0,
+    "yaw": 0
+   },
+   "pelvis": 0.98,
+   "drift": 0
+  }
+ ]
+}

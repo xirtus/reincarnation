@@ -1,0 +1,43 @@
+{
+  "name": "reincarnation-serpents-spine",
+  "version": "1.0.0",
+  "private": false,
+  "type": "module",
+  "description": "Reincarnation: The Serpent's Spine — a WebGPU soulslike action RPG built with three.js and TSL.",
+  "license": "GPL-3.0-only",
+  "author": "Andreas Xirtus",
+  "homepage": "https://github.com/xirtus/reincarnation#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/xirtus/reincarnation.git"
+  },
+  "bugs": {
+    "url": "https://github.com/xirtus/reincarnation/issues"
+  },
+  "keywords": [
+    "threejs",
+    "webgpu",
+    "tsl",
+    "soulslike",
+    "action-rpg",
+    "web-game",
+    "procedural"
+  ],
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "dev": "vite --host 127.0.0.1 --port 5199",
+    "build": "vite build",
+    "preview": "vite preview --host 127.0.0.1 --port 5199",
+    "test": "node --test tests/*.test.mjs",
+    "test:browser": "node scripts/check-game-presentation.mjs"
+  },
+  "dependencies": {
+    "three": "0.185.1"
+  },
+  "devDependencies": {
+    "playwright": "1.55.0",
+    "vite": "7.1.0"
+  }
+}
