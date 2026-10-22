@@ -2,7 +2,7 @@
 
 **The GPL-3.0 license in [`LICENSE`](LICENSE) covers the source code in this repository. It does not cover the art assets.**
 
-This project is a fan-made, non-commercial art project. The reference build ships with optimized,
+The included art is fan-made and intended for non-commercial use. The reference build ships with optimized,
 heavily reworked art so that the game is playable out of the box. That art is **not** original to
 this repository and is **not** licensed to you under the GPL.
 
